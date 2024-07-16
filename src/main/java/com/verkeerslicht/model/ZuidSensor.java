@@ -1,14 +1,18 @@
 package com.verkeerslicht.model;
 
-public class ZuidSensor extends Sensor{
+import com.verkeerslicht.datastructures.LinkedList;
+import com.verkeerslicht.datastructures.Node;
+
+public class ZuidSensor extends Sensor<Auto>
+{
     public ZuidSensor(VerkeersLicht verkeersLicht) {
-        super(verkeersLicht);
+        super(verkeersLicht,true);
     }
 
     @Override
     public void activate() {
         // check if there are more than 10 vehicles on the road
-        if (/* more than 10 vehicles on the road */) {
+        if (size()>10) {
            verkeersLicht.setGreen(true); // keep green light until 10 vehicles have passed
         }
     }

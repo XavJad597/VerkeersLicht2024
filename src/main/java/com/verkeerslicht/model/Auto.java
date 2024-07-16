@@ -20,5 +20,7 @@ public class Auto {
     }
 
 
+    public Auto(String car1) {
+    }
 }
 

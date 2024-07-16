@@ -1,18 +1,34 @@
 package com.verkeerslicht.model;
 
 
-public class WestSensor extends Sensor {
+import com.verkeerslicht.datastructures.LinkedList;
+import com.verkeerslicht.datastructures.Node;
 
-    public WestSensor(VerkeersLicht verkeersLicht) {
-        super(verkeersLicht);
+public class WestSensor extends Sensor<Auto> {
+
+
+    private OostSensor oostSensor;
+    private ZuidSensor zuidSensor;
+
+
+    public WestSensor(VerkeersLicht verkeersLicht, LinkedList<Auto> node) {
+        super(verkeersLicht, false);
+        this.oostSensor = new OostSensor(verkeersLicht);
+        this.zuidSensor = new ZuidSensor(verkeersLicht);
     }
 
     @Override
     public void activate() {
-        // combination of Sensor1 and Sensor2
-        OostSensor sensor1 = new OostSensor(verkeersLicht);
-        ZuidSensor sensor2 = new ZuidSensor(verkeersLicht);
-        sensor1.activate();
-        sensor2.activate();
+        // combination of OostSensor and ZuidSensor
+        oostSensor.activate();
+        zuidSensor.activate();
+
+        // combine the vehicles from both sensors
+        while (!oostSensor.isEmpty()) {
+            addVehicle(oostSensor.removeVehicle());
+        }
+        while (!zuidSensor.isEmpty()) {
+            addVehicle(zuidSensor.removeVehicle());
+        }
     }
 }
