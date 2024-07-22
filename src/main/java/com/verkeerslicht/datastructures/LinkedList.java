@@ -1,5 +1,6 @@
 package com.verkeerslicht.datastructures;
 
+import com.verkeerslicht.model.Auto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,66 +9,36 @@ import lombok.Setter;
 @Setter
 public class LinkedList<T> {
 
-        private Node<T> head;
-        public LinkedList() {
-            head = null;
-        }
+     private AutoNode head;
+     private int size;
 
-        public void add(T auto) {
-            Node<T> node = new Node<>(auto);
-            if (head == null) {
-                head = node;
-            } else {
-                Node<T> current = head;
-                while (current.getNext() != null) {
-                    current = current.getNext();
-                }
-                current.setNext(node);
-            }
-        }
+    public void addToFront(Auto auto){
+         AutoNode node = new AutoNode(auto);
+        node.setNext(head);
+        head = node;
+        size++;
+    }
 
-        public boolean isEmpty() {
-            return head == null;
-        }
 
-    public T removeFirst() {
-        if (head == null) {
-            throw new RuntimeException("List is empty");
+    public Auto removeFromFront(){
+        if (isEmpty()){
+            return null;
         }
-       T auto =  head.getVehicle();
+        AutoNode removedNode = head;
         head = head.getNext();
-        return auto;
+        size--;
+        removedNode.setNext(null);
+        return removedNode.getAuto();
+    }
+
+    public Auto peek(){
+        return head.getAuto();
     }
 
 
-    public T removeLast() {
-        if (head == null) {
-            throw new RuntimeException("List is empty");
-        }
-
-        if (head.getNext() == null) {
-            T last = head.getVehicle();
-            head = null;
-            return last;
-        }
-
-        Node<T> current = head;
-        while (current.getNext().getNext() != null) {
-            current = current.getNext();
-        }
-
-        T last = current.getNext().getVehicle();
-        current.setNext(null);
-        return last;
+    public boolean isEmpty(){
+        return head == null;
     }
 
-    public int size() {
-        int count = 0;
-        Node<T> current = head;
-        while (current != null) {
-            count++;
-            current = current.getNext();
-        }
-        return count;
-    }
+
 }

@@ -2,7 +2,7 @@ package com.verkeerslicht.model;
 
 
 import com.verkeerslicht.datastructures.LinkedList;
-import com.verkeerslicht.datastructures.Node;
+import com.verkeerslicht.datastructures.AutoNode;
 
 public class WestSensor extends Sensor<Auto> {
 
@@ -15,6 +15,11 @@ public class WestSensor extends Sensor<Auto> {
         super(verkeersLicht, false);
         this.oostSensor = new OostSensor(verkeersLicht);
         this.zuidSensor = new ZuidSensor(verkeersLicht);
+
+    }
+
+    public WestSensor(VerkeersLicht verkeersLicht) {
+        super();
     }
 
     @Override
