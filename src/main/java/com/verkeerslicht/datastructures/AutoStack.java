@@ -4,11 +4,11 @@ import com.verkeerslicht.model.Auto;
 
 
 public class AutoStack {
-    private final LinkedList<Auto> stack;
+    private final LinkedList stack;
 
 
     public AutoStack() {
-        stack = new LinkedList<>();
+        stack = new LinkedList();
 
     }
 

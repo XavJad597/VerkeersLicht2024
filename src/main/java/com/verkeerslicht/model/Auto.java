@@ -13,10 +13,9 @@ public class Auto {
     private String type; // "normal", "police", "ambulance", "firetruck"
     private PriorityLevel priorityLevel;
 
-    public Auto(int volgNummer, String kentekenNummer, String type, PriorityLevel priorityLevel) {
+    public Auto(int volgNummer, String kentekenNummer, PriorityLevel priorityLevel) {
         this.volgNummer = volgNummer;
         this.kentekenNummer = generateKentekenNummer(priorityLevel) ;
-        this.type = type;
         this.priorityLevel = priorityLevel ;
     }
     private String generateKentekenNummer(PriorityLevel priorityLevel) {

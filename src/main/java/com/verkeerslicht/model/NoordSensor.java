@@ -6,15 +6,23 @@ import com.verkeerslicht.datastructures.Node;
 public class NoordSensor extends Sensor<Auto> {
 
     public NoordSensor(VerkeersLicht verkeersLicht) {
-        super(verkeersLicht, true); // use a queue
+        super(verkeersLicht);
     }
-
 
     @Override
     public void activate() {
-        // check if there are less than 5 vehicles on the road
-        if (size()<5) {
-            verkeersLicht.setGreen(true); // keep green light until all vehicles have passed
+        // Check if there are less than 5 vehicles on the road
+        if (size() < 5) {
+            // Keep the light green until all vehicles have driven away
+            while (!isEmpty()) {
+                getVerkeersLicht().setGreen(true); // Ensure the light stays green
+                removeVehicle(); // Auto rijd weg
+            }
+            // All vehicles have left, turn the light red
+            getVerkeersLicht().setGreen(false);
+        } else {
+            // If there are 5 or more vehicles, do not change the light
+            getVerkeersLicht().setGreen(false);
         }
     }
 }

@@ -3,38 +3,81 @@ package com.verkeerslicht.datastructures;
 import com.verkeerslicht.constants.PriorityLevel;
 import com.verkeerslicht.model.Auto;
 
-public class PriorityQueue {
-    private int maxSize;
-    private Auto[] voertuigArray;
-    private int aantalvoertuigen;
-    private int frontQueue;
-    private int rearQueue;
+import java.util.Comparator;
 
-    public PriorityQueue(int maxSize) {
-        this.maxSize = maxSize;
-        this.voertuigArray = new Auto[maxSize];
-        this.aantalvoertuigen = 0;
-        this.frontQueue = 0;
-        this.rearQueue = -1;
+public class PriorityQueue  {
+    private LinkedList queue;
+   private Node head;
+   private int totalSize;
+
+    public PriorityQueue() {
+        this.queue = new LinkedList();
+        head = null;
+        totalSize = 0;
     }
 
-    public void insert(Auto auto){
-        int i;
-        if (aantalvoertuigen == 0){
-            voertuigArray[0] = auto;
-            aantalvoertuigen++;
+    public void insert(Auto auto) {
+        Node newNode = new Node(auto);
+        newNode.setAuto(auto);
+        newNode.setPriorityLevel(auto.getPriorityLevel());
+
+        // If the list is empty, insert the new node at the head
+        if (queue.isEmpty()) {
+            queue.addToFront(auto);
         } else {
-            for (i = aantalvoertuigen - 1; i >= 0; i--){
-                if (isPriority(auto.getPriorityLevel())){
-                    voertuigArray[i + 1] = voertuigArray[i];
-                }else{
-                    break;
-                }
+            Node current = queue.getHead();
+            Node previous = null;
+
+            // Traverse the list to find the correct position based on priority
+            while (current != null && comparePriority(current.getAuto(), auto)) {
+                previous = current;
+                current = current.getNext();
             }
 
-            voertuigArray[i + 1] = auto;
-            aantalvoertuigen++;
+            // Handle insertion based on priority
+            if (auto.getPriorityLevel() == PriorityLevel.AUTO) {
+                // Regular vehicles go to the end of the queue
+                queue.addToBack(auto);
+            } else {
+                // If previous is null, it means newNode has the highest priority and should be the new head
+                if (previous == null) {
+                    queue.addToFront(auto);
+                } else {
+                    // Insert newNode between previous and current
+                    queue.addBetween(previous, current, auto);
+                }
+            }
         }
+
+        totalSize++;
+    }
+
+
+
+    private boolean comparePriority(Auto a, Auto b) {
+        // Police should have the highest priority
+        if (a.getPriorityLevel() == PriorityLevel.POLITIE) {
+            return true;  // a should come before b
+        } else if (b.getPriorityLevel() == PriorityLevel.POLITIE) {
+            return false;  // b should come before a
+        }
+
+        // Next priority is Ambulance
+        if (a.getPriorityLevel() == PriorityLevel.AMBULANCE) {
+            return true;  // a should come before b
+        } else if (b.getPriorityLevel() == PriorityLevel.AMBULANCE) {
+            return false;  // b should come before a
+        }
+
+        // Firefighter has priority over regular cars
+        if (a.getPriorityLevel() == PriorityLevel.BRANDWEER) {
+            return true;  // a should come before b
+        } else if (b.getPriorityLevel() == PriorityLevel.BRANDWEER) {
+            return false;  // b should come before a
+        }
+
+        // For regular cars (AUTO), maintain their order
+        return false;  // Do not flip, a should stay in its place relative to b
     }
 
     private boolean isPriority(PriorityLevel voertuigPriority) {
@@ -42,48 +85,36 @@ public class PriorityQueue {
                 voertuigPriority == PriorityLevel.BRANDWEER;
     }
 
-    public void printPriorityQueue(){
-        for (int i = 0;i < aantalvoertuigen; i++){
-            System.out.println(voertuigArray[i]);
-        }
+    public Auto remove() {
+        return queue.removeFromFront();
     }
 
-    public void printQueue(){
-        while( !isEmpty() ) {
-            Auto n = removeHead();
-            System.out.println(n);
-            System.out.print(" ");
-        }
+    public Auto getPeek() {
+        return  queue.peek();
     }
 
-    // remove end of the voertuigArrayay
-    public Auto remove (){
-        return voertuigArray[--aantalvoertuigen];
+    public boolean isEmpty() {
+        return queue.isEmpty();
     }
-
-    public Auto removeHead(){
-        Auto temp = voertuigArray[frontQueue++]; // get value and incr frontQueue
-        if(frontQueue == maxSize) // deal with wraparound
-            frontQueue = 0;
-        aantalvoertuigen--; // one less item
-        return temp;
-    }
-
-    public boolean isFull(){
-        return aantalvoertuigen == maxSize;
-    }
-
-    public boolean isEmpty(){
-        return  (aantalvoertuigen == 0);
-    }
-
-    // peek end of voertuigArrayay
-    public Auto getPeek(){
-        return voertuigArray[frontQueue];
-    }
-
 
     public int size() {
-        return aantalvoertuigen;
+        return queue.getSize();
     }
-}
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Node current = queue.getHead();
+
+        while (current != null) {
+            sb.append(current.getAuto().toString()).append("\n");
+            current = current.getNext();
+        }
+
+        return sb.toString();
+    }
+
+
+
+    }
+

@@ -2,64 +2,45 @@ package com.verkeerslicht.model;
 
 import com.verkeerslicht.datastructures.Queue;
 import com.verkeerslicht.datastructures.AutoStack;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public abstract class Sensor<T> {
 
-    protected VerkeersLicht verkeersLicht;
-    protected Queue queue;
-    protected AutoStack stack;
+    private VerkeersLicht verkeersLicht;
+    private Queue queue;
 
-    public Sensor(VerkeersLicht verkeersLicht, boolean isQueueBased) {
+
+    public Sensor(VerkeersLicht verkeersLicht) {
         this.verkeersLicht = verkeersLicht;
-        if (isQueueBased) {
-            this.queue = new Queue();
-        } else {
-            this.stack = new AutoStack();
-        }
+        this.queue = new Queue();
     }
 
     public Sensor() {
-
+        this.queue = new Queue();
     }
 
     public abstract void activate();
 
     public void addVehicle(Auto auto) {
         if (auto != null) {
-            if (auto.getType().equals("ambulance") || auto.getType().equals("firetruck")) {
-                // High-priority vehicles go to the front of the stack/queue
-                stack.push(auto);
-            } else {
-                // Normal vehicles go to the back of the stack/queue
-                stack.pop();
-            }
+            queue.enqueue(auto);
         } else {
             throw new UnsupportedOperationException("Only Auto objects can be added to the sensor");
         }
     }
 
-
     public Auto removeVehicle() {
-        if (queue!= null) {
-            return queue.dequeue();
-        } else {
-            return stack.pop();
-        }
+        return (Auto) queue.dequeue();
     }
 
     public boolean isEmpty() {
-        if (queue!= null) {
-            return queue.isEmpty();
-        } else {
-            return stack.isEmpty();
-        }
+        return queue.isEmpty();
     }
 
     public int size() {
-        if (queue!= null) {
-            return queue.size();
-        } else {
-            return stack.getSize();
-        }
+        return queue.size();
     }
 }
