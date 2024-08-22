@@ -1,30 +1,39 @@
 package com.verkeerslicht.model;
 
+import com.verkeerslicht.constants.RoadCode;
 import com.verkeerslicht.datastructures.LinkedList;
 import com.verkeerslicht.datastructures.Node;
 
-public class NoordSensor extends Sensor<Auto> {
+public class NoordSensor extends Sensor {
 
-    public NoordSensor(VerkeersLicht verkeersLicht) {
+    private Road noordRoad;
+
+    public NoordSensor(VerkeersLicht verkeersLicht,Road noordRoad) {
         super(verkeersLicht);
+        this.noordRoad = noordRoad;
     }
 
     @Override
-    public void activate() {
-        // Check if there are less than 5 vehicles on the road
-        if (size() < 5) {
-            // Keep the light green until all vehicles have driven away
-            while (!isEmpty()) {
-                getVerkeersLicht().setGreen(true); // Ensure the light stays green
-                removeVehicle(); // Auto rijd weg
-            }
-            // All vehicles have left, turn the light red
-            getVerkeersLicht().setGreen(false);
-        } else {
-            // If there are 5 or more vehicles, do not change the light
-            getVerkeersLicht().setGreen(false);
+    public void activate(RoadCode roadCode) {
+        if (roadCode == RoadCode.NOORD) {
+            // Check if the road is not empty
+           if (!noordRoad.isEmpty() && noordRoad.getVoertuigPriorityQueue().size() <5) {
+               System.out.println("Er zijn minder dan 5 autos op het wegdek Noord..." + "\n"
+                       + "Er moeten " + noordRoad.getVoertuigPriorityQueue().size() + " autos oprijden");
+
+
+               while (!noordRoad.isEmpty() && ) {
+                   Auto auto = noordRoad.removeAuto();
+                   System.out.println("Processing auto: " + auto);
+                   addVehicle(auto);
+               }
+           }else if (noordRoad.isEmpty()) {
+               System.out.println("Weg dek Noord is leeg... skip naar zuid");
+           } else {
+               System.out.println("Iets is fout gegaan op wegdek Noord");
+           }
+        }
         }
     }
-}
 
 

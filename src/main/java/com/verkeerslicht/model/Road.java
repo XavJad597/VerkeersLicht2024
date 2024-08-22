@@ -1,12 +1,11 @@
 package com.verkeerslicht.model;
 
+import com.verkeerslicht.constants.RoadCode;
 import com.verkeerslicht.datastructures.AutoStack;
 import com.verkeerslicht.datastructures.PriorityQueue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Comparator;
 
 
 @Getter
@@ -14,18 +13,13 @@ import java.util.Comparator;
 @AllArgsConstructor
 public class Road {
 
-    private String roadCode;
+    private RoadCode roadCode;
     private boolean isGroen; // True if the light is green, false otherwise
     private PriorityQueue voertuigPriorityQueue; // For priority-based vehicle management
     private AutoStack voertuigStack; // For reverse sequence processing
 
-    private static final Comparator<Auto> AUTO_PRIORITY_COMPARATOR = new Comparator<Auto>() {
-        @Override
-        public int compare(Auto o1, Auto o2) {
-            return o1.getPriorityLevel().compareTo(o2.getPriorityLevel());
-        }
-    };
-    public Road(String roadCode) {
+
+    public Road(RoadCode roadCode) {
         this.roadCode = roadCode;
         this.voertuigPriorityQueue = new PriorityQueue(); // Adjust capacity as needed
         this.voertuigStack = new AutoStack();
@@ -52,6 +46,11 @@ public class Road {
             Auto vehicle = voertuigStack.pop();
             // Process vehicle (e.g., simulate passing through intersection)
         }
+    }
+
+    public boolean isEmpty(){
+        voertuigPriorityQueue.isEmpty();
+        return false;
     }
 
     @Override
