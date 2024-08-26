@@ -21,5 +21,6 @@ public interface VerkeerService {
 
     void printQueue();  // Print the current state of the queue (optional for debugging)
 
+    void performReverseSequence();
 
 }

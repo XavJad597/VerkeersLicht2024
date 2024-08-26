@@ -25,11 +25,12 @@ public abstract class Sensor {
         this.queue = new PriorityQueue();
     }
 
-    public abstract void activate(RoadCode roadCode);
+    public abstract void activate(RoadCode roadCode,AutoStack autoStack);
 
     public void addVehicle(Auto auto) {
         if (auto != null) {
             queue.insert(auto);
+
         } else {
             throw new UnsupportedOperationException("Only Auto objects can be added to the sensor");
         }
@@ -57,5 +58,10 @@ public abstract class Sensor {
             }
             getVerkeersLicht().setGreen(false); // Turn off the green light after processing
         }
+    }
+
+    public Auto peek() {
+        return queue.getPeek();
+
     }
 }

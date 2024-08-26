@@ -38,11 +38,11 @@ public class Application {
             westRoad.addAuto(new Auto(i, "AU" + i + "W", PriorityLevel.AUTO));
         }
 
-        // Test the setup
-        System.out.println("Noord Road: " + noordRoad);
-        System.out.println("Zuid Road: " + zuidRoad);
-        System.out.println("Oost Road: " + oostRoad);
-        System.out.println("West Road: " + westRoad);
+//        // Test the setup
+//        System.out.println("Noord Road: " + noordRoad);
+//        System.out.println("Zuid Road: " + zuidRoad);
+//        System.out.println("Oost Road: " + oostRoad);
+//        System.out.println("West Road: " + westRoad);
 
 
 
@@ -52,12 +52,13 @@ public class Application {
         VerkeersLicht westVerkeersLicht = new VerkeersLicht();
 
         NoordSensor noordSensor = new NoordSensor(noordVerkeersLicht,noordRoad);
-        OostSensor oostSensor = new OostSensor(oostVerkeersLicht);
-        ZuidSensor zuidSensor = new ZuidSensor(zuidVerkeersLicht);
-        WestSensor westSensor = new WestSensor(westVerkeersLicht);
+        OostSensor oostSensor = new OostSensor(oostVerkeersLicht,oostRoad);
+        ZuidSensor zuidSensor = new ZuidSensor(zuidVerkeersLicht,zuidRoad);
+        WestSensor westSensor = new WestSensor(westVerkeersLicht,oostRoad,zuidRoad,westRoad);
 
         VerkeerServiceImpl service = new VerkeerServiceImpl(noordSensor, oostSensor, zuidSensor, westSensor);
         service.startSequence();
+        service.performReverseSequence();
     }
 
 

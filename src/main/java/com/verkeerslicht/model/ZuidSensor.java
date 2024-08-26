@@ -1,43 +1,61 @@
 package com.verkeerslicht.model;
 
 import com.verkeerslicht.constants.RoadCode;
+import com.verkeerslicht.datastructures.AutoStack;
 import com.verkeerslicht.datastructures.LinkedList;
 import com.verkeerslicht.datastructures.Node;
 
 public class ZuidSensor extends Sensor {
     private static final int VEHICLE_THRESHOLD = 10;
     private static final int MIN_VEHICLES_TO_LEAVE = 10;
+    private Road zuidRoad;
 
-    public ZuidSensor(VerkeersLicht verkeersLicht) {
+    public ZuidSensor(VerkeersLicht verkeersLicht,Road zuidRoad) {
         super(verkeersLicht);
+        this.zuidRoad = zuidRoad;
     }
 
     @Override
-    public void activate(RoadCode roadCode) {
+    public void activate(RoadCode roadCode, AutoStack globalStack) {
         if (roadCode == RoadCode.ZUID) {
-            if (size() > VEHICLE_THRESHOLD) {
-                // Ensure the light remains green until at least 10 vehicles have left
-                while (size() > VEHICLE_THRESHOLD - MIN_VEHICLES_TO_LEAVE) {
+            int vehiclesProcessed = 0;  // Keep track of how many vehicles have been processed
+
+            // Only activate if there are more vehicles than the threshold
+            if (zuidRoad.getVoertuigPriorityQueue().size() > VEHICLE_THRESHOLD) {
+                // Process vehicles until we've processed the minimum required or there are no more vehicles
+                while (!zuidRoad.getVoertuigPriorityQueue().isEmpty() && vehiclesProcessed < MIN_VEHICLES_TO_LEAVE) {
                     // Keep the light green
                     getVerkeersLicht().setGreen(true);
-                    // Simulate the process of vehicles passing
-                    driveOutVehicles(size()); // This assumes that vehicles leave one by one
-                    // Optionally: Implement a delay or timer to manage the time
+
+                    // Remove and process the vehicle
+                    Auto auto = zuidRoad.removeAuto();
+
+                    if (auto != null) {
+                        System.out.println("Processing auto on ZUID: " + auto);
+                        globalStack.push(auto);
+                        vehiclesProcessed++;
+
+                        switch (auto.getPriorityLevel()) {
+                            case AUTO:
+                                System.out.println("Auto rijdt weg van Zuid: " + auto);
+                                break;
+                            case AMBULANCE:
+                                System.out.println("Ambulance rijdt weg van Zuid: " + auto);
+                                break;
+                            case BRANDWEER:
+                                System.out.println("Brandweer rijdt weg van Zuid: " + auto);
+                                break;
+                            case POLITIE:
+                                System.out.println("Politieauto rijdt weg van Zuid: " + auto);
+                                break;
+                        }
+                    }
                 }
-            } else {
-                getVerkeersLicht().setGreen(true); // Ensure the light is green if within the normal range
             }
+
+            // Turn off the light after processing the vehicles in this round
+            getVerkeersLicht().setGreen(false);
         }
     }
-
 }
-//
-//Based on the description, Sensor1 is associated with the East road, Sensor2 is associated with the South road, Sensor3 is associated with the West road, and Sensor4 is associated with the North road.
-//
-//        So, Sensor1 is the sensor for the East road, which checks if there are any vehicles present on the road before turning the green light on. If there are no vehicles present, the green light will be skipped once.
-//
-//
-//
-//
-//Answer with Web Search
 //
