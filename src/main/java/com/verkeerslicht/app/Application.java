@@ -1,67 +1,33 @@
 package com.verkeerslicht.app;
 
-import com.verkeerslicht.constants.PriorityLevel;
 import com.verkeerslicht.model.*;
+import com.verkeerslicht.service.VehicleDataInitializer;
+import com.verkeerslicht.service.VerkeerService;
 import com.verkeerslicht.service.VerkeerServiceImpl;
+
+import java.util.ArrayList;
 
 import static com.verkeerslicht.constants.RoadCode.*;
 
 public class Application {
     public static void main(String[] args) {
+        VehicleDataInitializer initializer = new VehicleDataInitializer();
+        VerkeerService service = new VerkeerServiceImpl();
 
-        Road noordRoad = new Road(NOORD);
-        Road zuidRoad = new Road(ZUID);
-        Road oostRoad = new Road(OOST);
-        Road westRoad = new Road(WEST);
 
-        noordRoad.addAuto(new Auto(1, "AU1234", PriorityLevel.AUTO));
-        noordRoad.addAuto(new Auto(2, "AU5678", PriorityLevel.AUTO));
-        noordRoad.addAuto(new Auto(3, "AM9012", PriorityLevel.AMBULANCE));
-        noordRoad.addAuto(new Auto(4, "AU3456", PriorityLevel.AUTO));
-        for (int i = 1; i <= 16; i++) {
-            zuidRoad.addAuto(new Auto(i, "AU" + i + "X", PriorityLevel.AUTO));
-        }
-        zuidRoad.addAuto(new Auto(17, "BR1234", PriorityLevel.BRANDWEER));
-        zuidRoad.addAuto(new Auto(18, "AU7890", PriorityLevel.AUTO));
-
-        // Add vehicles to Oost road
-        for (int i = 1; i <= 5; i++) {
-            oostRoad.addAuto(new Auto(i, "AU" + i + "Y", PriorityLevel.AUTO));
-        }
-
-        // Add vehicles to West road
-        for (int i = 1; i <= 8; i++) {
-            westRoad.addAuto(new Auto(i, "AU" + i + "Z", PriorityLevel.AUTO));
-        }
-        westRoad.addAuto(new Auto(9, "PO1234", PriorityLevel.POLITIE));
-        for (int i = 10; i <= 14; i++) {
-            westRoad.addAuto(new Auto(i, "AU" + i + "W", PriorityLevel.AUTO));
-        }
-
-//        // Test the setup
-//        System.out.println("Noord Road: " + noordRoad);
-//        System.out.println("Zuid Road: " + zuidRoad);
-//        System.out.println("Oost Road: " + oostRoad);
-//        System.out.println("West Road: " + westRoad);
+        ArrayList<Auto> voertuigenNoordList = initializer.initializeNoordWeg();
+        ArrayList<Auto> voertuigenZuidList = initializer.initializeZuidWeg();
+        ArrayList<Auto> voertuigenOostList = initializer.initializeOostWeg();
+        ArrayList<Auto> voertuigenWestList = initializer.initializeWestWeg();
 
 
 
-        VerkeersLicht noordVerkeersLicht = new VerkeersLicht();
-        VerkeersLicht oostVerkeersLicht = new VerkeersLicht();
-        VerkeersLicht zuidVerkeersLicht = new VerkeersLicht();
-        VerkeersLicht westVerkeersLicht = new VerkeersLicht();
+        service.priorityVehicles(voertuigenOostList,voertuigenZuidList,voertuigenWestList,voertuigenNoordList);
+        service.stoplichtRoulatie();
 
-        NoordSensor noordSensor = new NoordSensor(noordVerkeersLicht,noordRoad);
-        OostSensor oostSensor = new OostSensor(oostVerkeersLicht,oostRoad);
-        ZuidSensor zuidSensor = new ZuidSensor(zuidVerkeersLicht,zuidRoad);
-        WestSensor westSensor = new WestSensor(westVerkeersLicht,oostRoad,zuidRoad,westRoad);
 
-        VerkeerServiceImpl service = new VerkeerServiceImpl(noordSensor, oostSensor, zuidSensor, westSensor);
-        service.startSequence();
-        service.performReverseSequence();
     }
 
 
-
-
 }
+

@@ -3,7 +3,7 @@ package com.verkeerslicht.datastructures;
 import com.verkeerslicht.model.Auto;
 
 
-public class Queue<T> {
+public class Queue {
     private final LinkedList queue;
 
     public Queue() {

@@ -1,6 +1,6 @@
 package com.verkeerslicht.constants;
 
-public enum PriorityLevel  {
+public enum AutoType {
     POLITIE,
     BRANDWEER,
     AMBULANCE,

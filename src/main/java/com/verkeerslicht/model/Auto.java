@@ -1,43 +1,54 @@
 package com.verkeerslicht.model;
 
 
-import com.verkeerslicht.constants.PriorityLevel;
+import com.verkeerslicht.constants.AutoType;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class Auto {
+
+    private Road road;
     private int volgNummer;
     private String kentekenNummer;
-    private String type; // "normal", "police", "ambulance", "firetruck"
-    private PriorityLevel priorityLevel;
+    private AutoType type;
+    private int priorityLevel;
+    private int prioCar;
 
-    public Auto(int volgNummer, String kentekenNummer, PriorityLevel priorityLevel) {
+
+    public Auto( Road road , AutoType type,int volgNummer, int priorityLevel) {
         this.volgNummer = volgNummer;
         this.kentekenNummer = generateKentekenNummer(priorityLevel) ;
         this.priorityLevel = priorityLevel ;
+        this.road= road;
+        this.type = type;
     }
-    private String generateKentekenNummer(PriorityLevel priorityLevel) {
+
+    //genereeert de kentekennummers
+    private String generateKentekenNummer(int priorityLevel) {
 
         switch (priorityLevel){
-            case AUTO:
-                return createKentekenNumber("AU");
-            case POLITIE:
+            case 1:
                 return createKentekenNumber("PO");
-            case AMBULANCE:
+            case 2:
                 return createKentekenNumber("AM");
-            case BRANDWEER:
+            case 3:
                 return createKentekenNumber("BR");
+            case 4:
+                return createKentekenNumber("AU");
         }
         return null;
     }
+    //create de nummers
     private String createKentekenNumber(String letters) {
         int eerste2nummers = (int) Math.round((Math.random() * (100 - 10)) + 10);
         int laatse2nummers = (int) Math.round((Math.random() * (100 - 10)) + 10);
         kentekenNummer = letters + " " + eerste2nummers + laatse2nummers;
         return kentekenNummer;
     }
+
+
     public Auto(String car1) {
     }
     @Override
